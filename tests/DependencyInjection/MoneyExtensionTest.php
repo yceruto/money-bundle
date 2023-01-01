@@ -71,6 +71,7 @@ class MoneyExtensionTest extends TestCase
             ->get(AggregateMoneyParser::class);
 
         self::assertEquals(Money::EUR('1000'), $parser->parse('€10.00'));
+        self::assertEquals(Money::EUR('1000'), $parser->parse('10.00', new Currency('EUR')));
         self::assertEquals(Money::XBT('1'), $parser->parse('Ƀ0.00000001'));
     }
 

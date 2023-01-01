@@ -42,10 +42,8 @@ class MoneyExtension extends Extension
 
         $container->registerForAutoconfiguration(Currencies::class)
             ->addTag(CurrenciesPass::TAG);
-
         $container->registerForAutoconfiguration(MoneyFormatter::class)
             ->addTag(FormattersPass::TAG);
-
         $container->registerForAutoconfiguration(MoneyParser::class)
             ->addTag(FormattersPass::TAG);
 
