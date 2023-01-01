@@ -17,12 +17,14 @@ use Money\Currency;
 use Money\Currencies\AggregateCurrencies;
 use Money\Formatter\AggregateMoneyFormatter;
 use Money\Money;
+use Money\Parser\AggregateMoneyParser;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
+use Yceruto\MoneyBundle\DependencyInjection\Compiler\ParsersPass;
 use Yceruto\MoneyBundle\DependencyInjection\MoneyExtension;
 
 class MoneyExtensionTest extends TestCase
@@ -56,11 +58,20 @@ class MoneyExtensionTest extends TestCase
 
     public function testFormatterServices(): void
     {
-        $formatters = $this->createContainer([AggregateMoneyFormatter::class])
+        $formatter = $this->createContainer([AggregateMoneyFormatter::class])
             ->get(AggregateMoneyFormatter::class);
 
-        self::assertSame('€10.00', $formatters->format(Money::EUR('1000')));
-        self::assertSame('Ƀ0.00000001', $formatters->format(Money::XBT('1')));
+        self::assertSame('€10.00', $formatter->format(Money::EUR('1000')));
+        self::assertSame('Ƀ0.00000001', $formatter->format(Money::XBT('1')));
+    }
+
+    public function testParsersServices(): void
+    {
+        $parser = $this->createContainer([AggregateMoneyParser::class])
+            ->get(AggregateMoneyParser::class);
+
+        self::assertEquals(Money::EUR('1000'), $parser->parse('€10.00'));
+        self::assertEquals(Money::XBT('1'), $parser->parse('Ƀ0.00000001'));
     }
 
     private function createContainer(array $publicServices = [], array $configs = [[]]): ContainerInterface
@@ -68,6 +79,7 @@ class MoneyExtensionTest extends TestCase
         $container = (new ContainerBuilder(new ParameterBag()))
             ->addCompilerPass(new CurrenciesPass())
             ->addCompilerPass(new FormattersPass())
+            ->addCompilerPass(new ParsersPass())
         ;
 
         (new MoneyExtension())->load($configs, $container);

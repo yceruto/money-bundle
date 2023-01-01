@@ -24,7 +24,7 @@ use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 return static function (ContainerConfigurator $container) {
     $container->services()
         ->set(AggregateCurrencies::class)
-            ->args([abstract_arg('providers')])
+            ->args([abstract_arg('currencies')])
 
         ->set(CurrencyList::class)
             ->args([param('.money_currencies')])

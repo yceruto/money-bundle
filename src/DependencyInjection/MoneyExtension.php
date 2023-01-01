@@ -16,11 +16,16 @@ namespace Yceruto\MoneyBundle\DependencyInjection;
 use Money\Currencies;
 use Money\Formatter\IntlLocalizedDecimalFormatter;
 use Money\Formatter\IntlMoneyFormatter;
+use Money\MoneyFormatter;
+use Money\MoneyParser;
+use Money\Parser\IntlLocalizedDecimalParser;
+use Money\Parser\IntlMoneyParser;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
+use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
 use Yceruto\MoneyBundle\Formatter\IntlNumberFormatterFactory;
 
 class MoneyExtension extends Extension
@@ -38,14 +43,23 @@ class MoneyExtension extends Extension
         $container->registerForAutoconfiguration(Currencies::class)
             ->addTag(CurrenciesPass::TAG);
 
+        $container->registerForAutoconfiguration(MoneyFormatter::class)
+            ->addTag(FormattersPass::TAG);
+
+        $container->registerForAutoconfiguration(MoneyParser::class)
+            ->addTag(FormattersPass::TAG);
+
         $loader = new PhpFileLoader($container, new FileLocator(\dirname(__DIR__, 2).'/config'));
         $loader->load('currencies.php');
         $loader->load('formatters.php');
+        $loader->load('parsers.php');
 
         if (!extension_loaded('intl')) {
+            $container->removeDefinition(IntlNumberFormatterFactory::class);
             $container->removeDefinition(IntlMoneyFormatter::class);
             $container->removeDefinition(IntlLocalizedDecimalFormatter::class);
-            $container->removeDefinition(IntlNumberFormatterFactory::class);
+            $container->removeDefinition(IntlMoneyParser::class);
+            $container->removeDefinition(IntlLocalizedDecimalParser::class);
         }
     }
 }

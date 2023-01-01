@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
+use Yceruto\MoneyBundle\DependencyInjection\Compiler\ParsersPass;
 
 class MoneyBundle extends Bundle
 {
@@ -24,6 +25,7 @@ class MoneyBundle extends Bundle
     {
         $container->addCompilerPass(new CurrenciesPass());
         $container->addCompilerPass(new FormattersPass());
+        $container->addCompilerPass(new ParsersPass());
     }
 
     public function getPath(): string
