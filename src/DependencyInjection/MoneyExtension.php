@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
+use Yceruto\MoneyBundle\Formatter\IntlNumberFormatterFactory;
 
 class MoneyExtension extends Extension
 {
@@ -44,6 +45,7 @@ class MoneyExtension extends Extension
         if (!extension_loaded('intl')) {
             $container->removeDefinition(IntlMoneyFormatter::class);
             $container->removeDefinition(IntlLocalizedDecimalFormatter::class);
+            $container->removeDefinition(IntlNumberFormatterFactory::class);
         }
     }
 }

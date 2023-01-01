@@ -1,4 +1,4 @@
-# MoneyBundle (WIP)
+# MoneyBundle
 
 Symfony integration of the https://github.com/moneyphp/money library.
 

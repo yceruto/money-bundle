@@ -21,11 +21,22 @@ use Money\Formatter\DecimalMoneyFormatter;
 use Money\Formatter\IntlLocalizedDecimalFormatter;
 use Money\Formatter\IntlMoneyFormatter;
 use Money\MoneyFormatter;
-use NumberFormatter;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
+use Yceruto\MoneyBundle\Formatter\IntlNumberFormatterFactory;
 
 return static function (ContainerConfigurator $container) {
     $container->services()
+        ->set(IntlNumberFormatterFactory::class)
+            ->args([
+                service('request_stack')->nullOnInvalid(),
+                param('.money_formatter_number_locale'),
+                param('.money_formatter_number_style'),
+                param('.money_formatter_number_pattern'),
+            ])
+
+        ->set('money.intl.number_formatter', \NumberFormatter::class)
+            ->factory(service(IntlNumberFormatterFactory::class))
+
         ->set(AggregateMoneyFormatter::class)
             ->args([abstract_arg('formatters')])
 
@@ -35,24 +46,14 @@ return static function (ContainerConfigurator $container) {
 
         ->set(IntlLocalizedDecimalFormatter::class)
             ->args([
-                inline_service(NumberFormatter::class)
-                    ->args([
-                        param('.money_formatter_number_locale'),
-                        param('.money_formatter_number_style'),
-                        param('.money_formatter_number_pattern'),
-                    ]),
+                service('money.intl.number_formatter'),
                 service(Currencies::class),
             ])
             ->tag(FormattersPass::TAG, ['code' => '*'])
 
         ->set(IntlMoneyFormatter::class)
             ->args([
-                inline_service(NumberFormatter::class)
-                    ->args([
-                        param('.money_formatter_number_locale'),
-                        param('.money_formatter_number_style'),
-                        param('.money_formatter_number_pattern'),
-                    ]),
+                service('money.intl.number_formatter'),
                 service(Currencies::class),
             ])
             ->tag(FormattersPass::TAG, ['code' => '*'])
