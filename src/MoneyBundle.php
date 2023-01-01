@@ -13,10 +13,19 @@ declare(strict_types=1);
 
 namespace Yceruto\MoneyBundle;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
+use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
 
 class MoneyBundle extends Bundle
 {
+    public function build(ContainerBuilder $container): void
+    {
+        $container->addCompilerPass(new CurrenciesPass());
+        $container->addCompilerPass(new FormattersPass());
+    }
+
     public function getPath(): string
     {
         return \dirname(__DIR__);

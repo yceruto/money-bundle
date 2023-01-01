@@ -35,32 +35,90 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration(new Configuration(), $configs);
     }
 
-    public function testDefaultConfig(): void
+    /**
+     * @dataProvider configProvider
+     */
+    public function testConfig(array $input, array $output): void
     {
-        $configs = [[]];
-        $config = (new Processor())->processConfiguration(new Configuration(), $configs);
+        $config = (new Processor())->processConfiguration(new Configuration(), $input);
 
-        self::assertSame(['currencies' => []], $config);
+        self::assertSame($output, $config);
     }
 
-    public function testCustomConfig(): void
+    public function configProvider(): iterable
     {
-        $configs = [
-            [
-                'currencies' => [
-                    'EUR' => 3,
-                    'USD' => 4,
-                ],
-            ],
-        ];
-        $config = (new Processor())->processConfiguration(new Configuration(), $configs);
+       yield 'empty config' => [
+           'input' => [[]],
+           'output' => [
+               'currencies' => [],
+               'formatters' => [
+                   'intl' => [
+                       'number_locale' => 'en_US',
+                       'number_style' => 2,
+                       'number_pattern' => null,
+                   ],
+                   'bitcoin' => [
+                       'fraction_digits' => 8,
+                   ],
+               ],
+           ],
+       ];
 
-        $expected = [
-            'currencies' => [
-                'EUR' => 3,
-                'USD' => 4,
-            ],
-        ];
-        self::assertSame($expected, $config);
+       yield 'custom config' => [
+           'input' => [
+               [
+                   'currencies' => [
+                       'EUR' => 3,
+                       'USD' => 4,
+                   ],
+               ],
+           ],
+           'output' => [
+               'currencies' => [
+                   'EUR' => 3,
+                   'USD' => 4,
+               ],
+               'formatters' => [
+                   'intl' => [
+                       'number_locale' => 'en_US',
+                       'number_style' => 2,
+                       'number_pattern' => null,
+                   ],
+                   'bitcoin' => [
+                       'fraction_digits' => 8,
+                   ],
+               ],
+           ],
+       ];
+
+       yield 'override config' => [
+           'input' => [
+               [
+                   'currencies' => [
+                       'EUR' => 2,
+                   ],
+               ],
+               [
+                   'currencies' => [
+                       'EUR' => 3,
+                   ],
+               ],
+           ],
+           'output' => [
+               'currencies' => [
+                   'EUR' => 3,
+               ],
+               'formatters' => [
+                   'intl' => [
+                       'number_locale' => 'en_US',
+                       'number_style' => 2,
+                       'number_pattern' => null,
+                   ],
+                   'bitcoin' => [
+                       'fraction_digits' => 8,
+                   ],
+               ],
+           ],
+       ];
     }
 }

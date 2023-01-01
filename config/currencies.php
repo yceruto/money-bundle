@@ -14,29 +14,30 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Money\Currencies;
+use Money\Currencies\AggregateCurrencies;
 use Money\Currencies\BitcoinCurrencies;
 use Money\Currencies\CryptoCurrencies;
 use Money\Currencies\CurrencyList;
 use Money\Currencies\ISOCurrencies;
-use Yceruto\MoneyBundle\Currencies\AggregateCurrencies;
+use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 
 return static function (ContainerConfigurator $container) {
     $container->services()
         ->set(AggregateCurrencies::class)
-            ->args([tagged_iterator('money.currencies')])
+            ->args([abstract_arg('providers')])
 
         ->set(CurrencyList::class)
             ->args([param('.money_currencies')])
-            ->tag('money.currencies')
+            ->tag(CurrenciesPass::TAG)
 
         ->set(ISOCurrencies::class)
-            ->tag('money.currencies')
+            ->tag(CurrenciesPass::TAG)
 
         ->set(BitcoinCurrencies::class)
-            ->tag('money.currencies')
+            ->tag(CurrenciesPass::TAG)
 
         ->set(CryptoCurrencies::class)
-            ->tag('money.currencies')
+            ->tag(CurrenciesPass::TAG)
 
         ->alias(Currencies::class, AggregateCurrencies::class)
     ;
