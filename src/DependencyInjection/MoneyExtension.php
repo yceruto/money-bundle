@@ -27,6 +27,7 @@ class MoneyExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
+
         $container->setParameter('.money_currencies', $config['currencies']);
         $container->setParameter('.money_formatter_fraction_digits', $config['formatters']['bitcoin']['fraction_digits']);
         $container->setParameter('.money_formatter_number_locale', $config['formatters']['intl']['number_locale']);
