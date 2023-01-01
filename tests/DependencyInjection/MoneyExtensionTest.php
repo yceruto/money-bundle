@@ -13,14 +13,13 @@ declare(strict_types=1);
 
 namespace Yceruto\MoneyBundle\Tests\DependencyInjection;
 
-use Money\Currencies;
 use Money\Currency;
 use Money\Currencies\AggregateCurrencies;
 use Money\Formatter\AggregateMoneyFormatter;
 use Money\Money;
-use Money\MoneyFormatter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
@@ -37,22 +36,10 @@ class MoneyExtensionTest extends TestCase
                 ],
             ],
         ];
-        $container = new ContainerBuilder(new ParameterBag());
-
-        $extension = new MoneyExtension();
-        $extension->load($configs, $container);
+        $container = $this->createContainer([AggregateCurrencies::class], $configs);
 
         self::assertTrue($container->hasParameter('.money_currencies'));
         self::assertSame(['FOO' => 3], $container->getParameter('.money_currencies'));
-
-        // test definition
-        self::assertTrue($container->hasAlias(Currencies::class));
-        self::assertTrue($container->hasDefinition(AggregateCurrencies::class));
-
-        $container->addCompilerPass(new CurrenciesPass());
-        $container->getDefinition(AggregateCurrencies::class)
-            ->setPublic(true);
-        $container->compile();
 
         $currencies = $container->get(AggregateCurrencies::class);
 
@@ -69,24 +56,29 @@ class MoneyExtensionTest extends TestCase
 
     public function testFormatterServices(): void
     {
-        $container = new ContainerBuilder(new ParameterBag());
-
-        $extension = new MoneyExtension();
-        $extension->load([[]], $container);
-
-        // test definition
-        self::assertTrue($container->hasAlias(MoneyFormatter::class));
-        self::assertTrue($container->hasDefinition(AggregateMoneyFormatter::class));
-
-        $container->addCompilerPass(new CurrenciesPass());
-        $container->addCompilerPass(new FormattersPass());
-        $container->getDefinition(AggregateMoneyFormatter::class)
-            ->setPublic(true);
-        $container->compile();
-
-        $formatters = $container->get(AggregateMoneyFormatter::class);
+        $formatters = $this->createContainer([AggregateMoneyFormatter::class])
+            ->get(AggregateMoneyFormatter::class);
 
         self::assertSame('€10.00', $formatters->format(Money::EUR('1000')));
         self::assertSame('Ƀ0.00000001', $formatters->format(Money::XBT('1')));
+    }
+
+    private function createContainer(array $publicServices = [], array $configs = [[]]): ContainerInterface
+    {
+        $container = (new ContainerBuilder(new ParameterBag()))
+            ->addCompilerPass(new CurrenciesPass())
+            ->addCompilerPass(new FormattersPass())
+        ;
+
+        (new MoneyExtension())->load($configs, $container);
+
+        foreach ($publicServices as $serviceId) {
+            $container->getDefinition($serviceId)
+                ->setPublic(true);
+        }
+
+        $container->compile();
+
+        return $container;
     }
 }
