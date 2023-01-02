@@ -26,6 +26,9 @@ use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\ParsersPass;
 use Yceruto\MoneyBundle\DependencyInjection\MoneyExtension;
+use Yceruto\MoneyBundle\Tests\DependencyInjection\Fixtures\CustomCurrencies;
+use Yceruto\MoneyBundle\Tests\DependencyInjection\Fixtures\CustomMoneyFormatter;
+use Yceruto\MoneyBundle\Tests\DependencyInjection\Fixtures\CustomMoneyParser;
 
 class MoneyExtensionTest extends TestCase
 {
@@ -38,17 +41,25 @@ class MoneyExtensionTest extends TestCase
                 ],
             ],
         ];
-        $container = $this->createContainer([AggregateCurrencies::class], $configs);
+        $container = $this->createContainer([AggregateCurrencies::class], $configs, static function (ContainerBuilder $container) {
+            $container->register(CustomCurrencies::class)
+                ->addTag('money.currencies');
+        });
 
         self::assertTrue($container->hasParameter('.money_currencies'));
         self::assertSame(['FOO' => 3], $container->getParameter('.money_currencies'));
 
         $currencies = $container->get(AggregateCurrencies::class);
 
-        // test custom currency list
+        // test currency list
         $currency = new Currency('FOO');
         self::assertTrue($currencies->contains($currency));
         self::assertSame(3, $currencies->subunitFor($currency));
+
+        // test custom currencies
+        $currency = new Currency('ZZZ');
+        self::assertTrue($currencies->contains($currency));
+        self::assertSame(0, $currencies->subunitFor($currency));
 
         // test ISO currencies
         $currency = new Currency('EUR');
@@ -58,24 +69,34 @@ class MoneyExtensionTest extends TestCase
 
     public function testFormatterServices(): void
     {
-        $formatter = $this->createContainer([AggregateMoneyFormatter::class])
-            ->get(AggregateMoneyFormatter::class);
+        $container = $this->createContainer([AggregateMoneyFormatter::class], callback: static function (ContainerBuilder $container) {
+            $container->register(CustomMoneyFormatter::class)
+                ->addTag('money.formatter', ['code' => 'ZZZ']);
+        });
+
+        $formatter = $container->get(AggregateMoneyFormatter::class);
 
         self::assertSame('€10.00', $formatter->format(Money::EUR('1000')));
         self::assertSame('Ƀ0.00000001', $formatter->format(Money::XBT('1')));
+        self::assertSame('ZZZ 10', $formatter->format(new Money('10', new Currency('ZZZ'))));
     }
 
     public function testParsersServices(): void
     {
-        $parser = $this->createContainer([AggregateMoneyParser::class])
-            ->get(AggregateMoneyParser::class);
+        $container = $this->createContainer([AggregateMoneyParser::class], callback: static function (ContainerBuilder $container) {
+            $container->register(CustomMoneyParser::class)
+                ->addTag('money.parser');
+        });
+
+        $parser = $container->get(AggregateMoneyParser::class);
 
         self::assertEquals(Money::EUR('1000'), $parser->parse('€10.00'));
         self::assertEquals(Money::EUR('1000'), $parser->parse('10.00', new Currency('EUR')));
         self::assertEquals(Money::XBT('1'), $parser->parse('Ƀ0.00000001'));
+        self::assertEquals(new Money('10', new Currency('ZZZ')), $parser->parse('ZZZ 10'));
     }
 
-    private function createContainer(array $publicServices = [], array $configs = [[]]): ContainerInterface
+    private function createContainer(array $publicServices = [], array $configs = [[]], \Closure $callback = null): ContainerInterface
     {
         $container = (new ContainerBuilder(new ParameterBag()))
             ->addCompilerPass(new CurrenciesPass())
@@ -84,6 +105,10 @@ class MoneyExtensionTest extends TestCase
         ;
 
         (new MoneyExtension())->load($configs, $container);
+
+        if (null !== $callback) {
+            $callback($container);
+        }
 
         foreach ($publicServices as $serviceId) {
             $container->getDefinition($serviceId)
