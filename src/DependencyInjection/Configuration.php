@@ -56,6 +56,15 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+
+                ->arrayNode('exchanges')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('fixed')
+                            ->variablePrototype()->defaultValue([])->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

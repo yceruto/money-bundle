@@ -61,6 +61,9 @@ class ConfigurationTest extends TestCase
                        'fraction_digits' => 8,
                    ],
                ],
+               'exchanges' => [
+                   'fixed' => [],
+               ],
            ],
        ];
 
@@ -71,6 +74,18 @@ class ConfigurationTest extends TestCase
                        'EUR' => 3,
                        'USD' => 4,
                    ],
+                   'formatters' => [
+                       'bitcoin' => [
+                           'fraction_digits' => 7,
+                       ],
+                   ],
+                   'exchanges' => [
+                       'fixed' => [
+                           'EUR' => [
+                               'USD' => 1.08,
+                           ]
+                       ],
+                   ],
                ],
            ],
            'output' => [
@@ -79,13 +94,20 @@ class ConfigurationTest extends TestCase
                    'USD' => 4,
                ],
                'formatters' => [
+                   'bitcoin' => [
+                       'fraction_digits' => 7,
+                   ],
                    'intl' => [
                        'number_locale' => 'en_US',
                        'number_style' => 2,
                        'number_pattern' => null,
                    ],
-                   'bitcoin' => [
-                       'fraction_digits' => 8,
+               ],
+               'exchanges' => [
+                   'fixed' => [
+                       'EUR' => [
+                           'USD' => 1.08,
+                       ]
                    ],
                ],
            ],
@@ -117,6 +139,9 @@ class ConfigurationTest extends TestCase
                    'bitcoin' => [
                        'fraction_digits' => 8,
                    ],
+               ],
+               'exchanges' => [
+                   'fixed' => [],
                ],
            ],
        ];

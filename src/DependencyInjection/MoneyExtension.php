@@ -39,6 +39,7 @@ class MoneyExtension extends Extension
         $container->setParameter('.money_formatter_number_locale', $config['formatters']['intl']['number_locale']);
         $container->setParameter('.money_formatter_number_style', $config['formatters']['intl']['number_style']);
         $container->setParameter('.money_formatter_number_pattern', $config['formatters']['intl']['number_pattern']);
+        $container->setParameter('.money_exchange_fixed', $config['exchanges']['fixed']);
 
         $container->registerForAutoconfiguration(Currencies::class)
             ->addTag(CurrenciesPass::TAG);
@@ -51,6 +52,7 @@ class MoneyExtension extends Extension
         $loader->load('currencies.php');
         $loader->load('formatters.php');
         $loader->load('parsers.php');
+        $loader->load('exchangers.php');
 
         if (!extension_loaded('intl')) {
             $container->removeDefinition(IntlNumberFormatterFactory::class);
