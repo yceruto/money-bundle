@@ -61,7 +61,29 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->arrayNode('fixed')
-                            ->variablePrototype()->defaultValue([])->end()
+                            ->variablePrototype()
+                                ->defaultValue([])
+                                ->validate()
+                                    ->ifTrue(static function ($array): bool {
+                                        if (!is_array($array)) {
+                                            return true;
+                                        }
+
+                                        foreach ($array as $k => $v) {
+                                            if (!is_string($k)) {
+                                                return true;
+                                            }
+
+                                            if (!is_string($v)) {
+                                                return true;
+                                            }
+                                        }
+
+                                        return false;
+                                    })
+                                    ->thenInvalid('Expected an array of string.')
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

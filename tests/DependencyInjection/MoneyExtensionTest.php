@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Yceruto\MoneyBundle\Tests\DependencyInjection;
 
+use Money\Converter;
 use Money\Currency;
 use Money\Currencies\AggregateCurrencies;
 use Money\Formatter\AggregateMoneyFormatter;
@@ -94,6 +95,26 @@ class MoneyExtensionTest extends TestCase
         self::assertEquals(Money::EUR('1000'), $parser->parse('10.00', new Currency('EUR')));
         self::assertEquals(Money::XBT('1'), $parser->parse('Ƀ0.00000001'));
         self::assertEquals(new Money('10', new Currency('ZZZ')), $parser->parse('ZZZ 10'));
+    }
+
+    public function testExchangesServices(): void
+    {
+        $configs = [
+            [
+                'exchanges' => [
+                    'fixed' => [
+                        'EUR' => [
+                            'USD' => '1.06',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $converter = $this->createContainer([Converter::class], $configs)
+            ->get(Converter::class);
+
+        $converted = $converter->convert(Money::EUR('200'), new Currency('USD'));
+        self::assertEquals(Money::USD('212'), $converted);
     }
 
     private function createContainer(array $publicServices = [], array $configs = [[]], \Closure $callback = null): ContainerInterface

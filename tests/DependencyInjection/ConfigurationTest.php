@@ -82,7 +82,7 @@ class ConfigurationTest extends TestCase
                    'exchanges' => [
                        'fixed' => [
                            'EUR' => [
-                               'USD' => 1.08,
+                               'USD' => '1.08',
                            ]
                        ],
                    ],
@@ -106,7 +106,7 @@ class ConfigurationTest extends TestCase
                'exchanges' => [
                    'fixed' => [
                        'EUR' => [
-                           'USD' => 1.08,
+                           'USD' => '1.08',
                        ]
                    ],
                ],
@@ -119,16 +119,37 @@ class ConfigurationTest extends TestCase
                    'currencies' => [
                        'EUR' => 2,
                    ],
+                   'exchanges' => [
+                       'fixed' => [
+                           'EUR' => [
+                               'USD' => '1.08',
+                           ]
+                       ],
+                   ],
                ],
                [
                    'currencies' => [
                        'EUR' => 3,
+                   ],
+                   'exchanges' => [
+                       'fixed' => [
+                           'EUR' => [
+                               'USD' => '1.10',
+                           ]
+                       ],
                    ],
                ],
            ],
            'output' => [
                'currencies' => [
                    'EUR' => 3,
+               ],
+               'exchanges' => [
+                   'fixed' => [
+                       'EUR' => [
+                           'USD' => '1.10',
+                       ]
+                   ],
                ],
                'formatters' => [
                    'intl' => [
@@ -139,9 +160,6 @@ class ConfigurationTest extends TestCase
                    'bitcoin' => [
                        'fraction_digits' => 8,
                    ],
-               ],
-               'exchanges' => [
-                   'fixed' => [],
                ],
            ],
        ];
