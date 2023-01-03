@@ -24,6 +24,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Twig\Extension\AbstractExtension;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
 use Yceruto\MoneyBundle\Formatter\IntlNumberFormatterFactory;
@@ -60,6 +61,10 @@ class MoneyExtension extends Extension
             $container->removeDefinition(IntlLocalizedDecimalFormatter::class);
             $container->removeDefinition(IntlMoneyParser::class);
             $container->removeDefinition(IntlLocalizedDecimalParser::class);
+        }
+
+        if (class_exists(AbstractExtension::class)) {
+            $loader->load('twig.php');
         }
     }
 }

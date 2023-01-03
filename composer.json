@@ -19,7 +19,8 @@
     "require-dev": {
         "ext-gmp": "*",
         "ext-intl": "*",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "twig/twig": "^3.5"
     },
     "config": {
         "preferred-install": "dist",
