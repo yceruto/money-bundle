@@ -35,5 +35,8 @@
         "psr-4": {
             "Yceruto\\MoneyBundle\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit tests"
     }
 }
