@@ -2,6 +2,8 @@
 
 Symfony integration of the https://github.com/moneyphp/money library.
 
+![ci](https://github.com/yceruto/money-bundle/actions/workflows/ci.yml/badge.svg)
+
 ## Install
 
     $ composer require yceruto/money-bundle
