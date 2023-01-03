@@ -17,16 +17,23 @@ use Money\Converter;
 use Money\Currencies;
 use Money\Exchange;
 use Money\Exchange\FixedExchange;
+use Money\Exchange\IndirectExchange;
 
 return static function (ContainerConfigurator $container) {
     $container->services()
-        ->set(FixedExchange::class)
-            ->args([param('.money_exchange_fixed')])
-
         ->set(Converter::class)
             ->args([
                 service(Currencies::class),
                 service(Exchange::class),
+            ])
+
+        ->set(FixedExchange::class)
+            ->args([param('.money_exchange_fixed')])
+
+        ->set(IndirectExchange::class)
+            ->args([
+                service(Exchange::class),
+                service(Currencies::class),
             ])
 
         ->alias(Exchange::class, FixedExchange::class)
