@@ -55,7 +55,7 @@ class MoneyExtension extends Extension
         $loader->load('parsers.php');
         $loader->load('exchangers.php');
 
-        if (!extension_loaded('intl')) {
+        if (!class_exists(\NumberFormatter::class)) {
             $container->removeDefinition(IntlNumberFormatterFactory::class);
             $container->removeDefinition(IntlMoneyFormatter::class);
             $container->removeDefinition(IntlLocalizedDecimalFormatter::class);

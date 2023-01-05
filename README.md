@@ -68,3 +68,7 @@ service, and it comes with the following parsers by default:
 
 To register a custom parser, you need to implement the `Money\MoneyParser` interface and tag the service with `money.parser`. 
 This will enable you to use your custom parser to parse monetary values from a given text.
+
+## Twig filter
+
+    {{ money|money_format }}
