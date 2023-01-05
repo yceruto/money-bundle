@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Form\Forms;
-use Twig\Extension\AbstractExtension;
+use Twig\Environment;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
 use Yceruto\MoneyBundle\Formatter\IntlNumberFormatterFactory;
@@ -64,7 +64,7 @@ class MoneyExtension extends Extension
             $container->removeDefinition(IntlLocalizedDecimalParser::class);
         }
 
-        if (class_exists(AbstractExtension::class)) {
+        if (class_exists(Environment::class)) {
             $loader->load('twig.php');
         }
 
