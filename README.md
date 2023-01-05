@@ -72,3 +72,7 @@ This will enable you to use your custom parser to parse monetary values from a g
 ## Twig filter
 
     {{ money|money_format }}
+
+## Form
+
+The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` options from the `currency` value.

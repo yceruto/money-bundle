@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Money\MoneyFormatter;
-use Yceruto\MoneyBundle\Twig\MoneyTwigExtension;
+use Money\Currencies;
+use Yceruto\MoneyBundle\Form\Type\Extension\MoneyTypeExtension;
 
 return static function (ContainerConfigurator $container) {
     $container->services()
-        ->set(MoneyTwigExtension::class)
-            ->args([service(MoneyFormatter::class)])
-            ->tag('twig.extension')
+        ->set(MoneyTypeExtension::class)
+            ->args([service(Currencies::class)])
+            ->tag('form.type_extension')
     ;
 };
