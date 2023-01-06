@@ -18,6 +18,7 @@ use Money\Currencies;
 use Money\Exchange;
 use Money\Exchange\FixedExchange;
 use Money\Exchange\IndirectExchange;
+use Money\Exchange\ReversedCurrenciesExchange;
 
 return static function (ContainerConfigurator $container) {
     $container->services()
@@ -36,6 +37,16 @@ return static function (ContainerConfigurator $container) {
                 service(Currencies::class),
             ])
 
+        ->set(ReversedCurrenciesExchange::class)
+            ->args([service(Exchange::class)])
+
+        ->set('money.reversed_converter', Converter::class)
+            ->args([
+                service(Currencies::class),
+                service(ReversedCurrenciesExchange::class),
+            ])
+
         ->alias(Exchange::class, FixedExchange::class)
+        ->alias(Converter::class.' $reversedConverter', 'money.reversed_converter')
     ;
 };

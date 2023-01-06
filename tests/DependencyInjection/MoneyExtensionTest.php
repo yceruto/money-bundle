@@ -22,6 +22,7 @@ use Money\Parser\AggregateMoneyParser;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
@@ -110,16 +111,23 @@ class MoneyExtensionTest extends TestCase
                 ],
             ],
         ];
+        $container = $this->createContainer([
+            Converter::class,
+            Converter::class.' $reversedConverter',
+        ], $configs);
 
-        $converter = $this->createContainer([Converter::class], $configs)
-            ->get(Converter::class);
-
+        $converter = $container->get(Converter::class);
         $converted = $converter->convert(Money::EUR('200'), new Currency('USD'));
         self::assertEquals(Money::USD('212'), $converted);
+
+        /** @var Converter $reversedConverter */
+        $reversedConverter = $container->get(Converter::class.' $reversedConverter');
+        $converted = $reversedConverter->convert(Money::USD('212'), new Currency('EUR'));
+        self::assertEquals(Money::EUR('200'), $converted);
     }
 
     /**
-     * @param array<class-string>                       $publicServices
+     * @param array<class-string|string>                $publicServices
      * @param array<array-key, array<array-key, mixed>> $configs
      */
     private function createContainer(array $publicServices = [], array $configs = [[]], \Closure $callback = null): ContainerInterface
@@ -137,8 +145,13 @@ class MoneyExtensionTest extends TestCase
         }
 
         foreach ($publicServices as $serviceId) {
-            $container->getDefinition($serviceId)
-                ->setPublic(true);
+            try {
+                $container->getDefinition($serviceId)
+                    ->setPublic(true);
+            } catch (ServiceNotFoundException) {
+                $container->getAlias($serviceId)
+                    ->setPublic(true);
+            }
         }
 
         $container->compile();

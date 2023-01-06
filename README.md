@@ -15,13 +15,16 @@ It is important to ensure that the bundle is added to the `config/bundles.php` f
 Applications often require a specific subset of currencies from different data sources. To facilitate this, you can 
 implement the `Money\Currencies` interface, which provides a list of available currencies and the subunit for each currency.
 
-The `Currencies` interface is also an alias for the `Money\Currencies\AggregateCurrencies` service, which 
-comes with the following providers by default:
+The following currencies classes are available as services:
 
- * Money\Currencies\CurrencyList;
- * Money\Currencies\ISOCurrencies;
- * Money\Currencies\BitcoinCurrencies;
- * Money\Currencies\CryptoCurrencies;
+ * Money\Currencies\Currencies (alias for AggregateCurrencies)
+ * Money\Currencies\CurrencyList
+ * Money\Currencies\ISOCurrencies
+ * Money\Currencies\BitcoinCurrencies
+ * Money\Currencies\CryptoCurrencies
+
+The `Currencies` interface is an alias for the `Money\Currencies\AggregateCurrencies` service, which comes with default
+currency providers.
 
 The providers are injected into the `AggregateCurrencies` service in the specified order, and you can add more providers 
 by implementing the `Money\Currencies` interface and tagging it with `money.currencies` as a service.
@@ -41,13 +44,27 @@ Money formatters can be helpful when you need to display a monetary value in a s
 money object into a human-readable string, making it easier to present financial data to users. By using formatters, you 
 can ensure that the money values you display are clear and easy to understand.
 
-You can use the `Money\MoneyFormatter` interface as a dependency for any service because it is an alias for the `Money\Formatter\AggregateMoneyFormatter` 
-service, and it comes with the following formatters by default:
+The following formatter classes are available as services:
 
+ * Money\Formatter\MoneyFormatter (alias for AggregateMoneyFormatter)
  * Money\Formatter\IntMoneyFormatter (default if Intl extension is enabled)
  * Money\Formatter\IntLocalizedMoneyFormatter (available if Intl is enabled)
  * Money\Formatter\DecimalMoneyFormatter (default if Intl extension is disabled)
  * Money\Formatter\BitcoinMoneyFormatter (available for `XBT` currency code)
+
+You can use the `Money\MoneyFormatter` interface as a dependency for any service because it is an alias for the `Money\Formatter\AggregateMoneyFormatter`
+service, and it comes with default formatters.
+
+Use the following configuration to set default values for the current formatters:
+
+    money:
+        formatters:
+            intl:
+                number_locale: 'en_US'
+                number_style: 2 # \NumberFormatter::CURRENCY
+                number_pattern: null
+            bitcoin:
+                fraction_digits: 8
 
 To register a custom formatter, you will need to implement the `Money\MoneyFormatter` interface and tag the service with 
 `money.formatter` and the currency `code` attribute that the formatter supports. This will allow you to use your custom 
@@ -58,16 +75,47 @@ formatter to format monetary values in a specific currency. If your new formatte
 
 Money parsers can help automate the process of extracting monetary value from text, making it more efficient and accurate.
 
-You can use the `Money\MoneyParser` interface as a dependency for any service because it is an alias for the `Money\Parser\AggregateMoneyParser`
-service, and it comes with the following parsers by default:
+The following parser classes are available as services:
 
+ * Money\Parser\MoneyParser (alias for AggregateMoneyParser)
  * Money\Parser\IntMoneyParser (default if Intl extension is enabled)
  * Money\Parser\IntLocalizedDecimalParser (available if Intl is enabled)
  * Money\Parser\DecimalMoneyParser (default if Intl extension is disabled)
  * Money\Parser\BitcoinMoneyParser (available for `XBT` currency code)
 
+You can use the `Money\MoneyParser` interface as a dependency for any service because it is an alias for the `Money\Parser\AggregateMoneyParser`
+service, and it comes with default parsers.
+
 To register a custom parser, you need to implement the `Money\MoneyParser` interface and tag the service with `money.parser`. 
 This will enable you to use your custom parser to parse monetary values from a given text.
+
+## Exchangers
+
+To convert a `Money` instance from one currency to another, you need to use the `Money\Converter` service. This class relies 
+on the `Currencies` and `Exchange` services. The `Exchange` service returns a `CurrencyPair`, which represents a combination 
+of the base currency, counter currency, and the conversion ratio.
+
+The following exchange classes are available as services:
+
+ * Money\Exchange (alias for FixedExchange)
+ * Money\Exchange\FixedExchange
+ * Money\Exchange\IndirectExchange
+ * Money\Exchange\ReversedCurrenciesExchange
+
+In some cases, you may want the `Money\Converter` service to also resolve the reverse of a given `CurrencyPair` if the original 
+cannot be found. To add this capability, you can inject the `Converter $reversedConverter` argument, which is an alias for 
+`money.reversed_converter` service. If a reverse `CurrencyPair` can be found, it is used as a divisor of `1` to calculate 
+the reverse conversion ratio.
+
+To configure the `Money\Exchange\FixedExchange` service, you can use the following configuration:
+
+    money:
+        exchanges:
+            fixed:
+                EUR:
+                    USD: '1.10'
+
+Note: Integration with third-party services is currently outside the scope of this bundle.
 
 ## Twig
 
