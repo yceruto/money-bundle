@@ -89,7 +89,7 @@ service, and it comes with default parsers.
 To register a custom parser, you need to implement the `Money\MoneyParser` interface and tag the service with `money.parser`. 
 This will enable you to use your custom parser to parse monetary values from a given text.
 
-## Exchangers
+## Exchanges
 
 To convert a `Money` instance from one currency to another, you need to use the `Money\Converter` service. This class relies 
 on the `Currencies` and `Exchange` services. The `Exchange` service returns a `CurrencyPair`, which represents a combination 
