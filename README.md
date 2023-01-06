@@ -117,12 +117,24 @@ To configure the `Money\Exchange\FixedExchange` service, you can use the followi
 
 Note: Integration with third-party services is currently outside the scope of this bundle.
 
+## Form
+
+The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` options from the `currency` value.
+
+You can disable this integration by modifying the configuration:
+
+    money:
+        form:
+            enabled: false
+
 ## Twig
 
 If you have installed `twig/twig` as your template engine, you can use the Twig filter provided to format your money objects:
 
     {{ money|money_format }}
 
-## Form
+You can disable this integration by modifying the configuration:
 
-The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` options from the `currency` value.
+    money:
+        twig:
+            enabled: false
