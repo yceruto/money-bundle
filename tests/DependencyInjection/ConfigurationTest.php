@@ -53,6 +53,8 @@ class ConfigurationTest extends TestCase
        yield 'empty config' => [
            'input' => [[]],
            'output' => [
+               'form' => ['enabled' => true],
+               'twig' => ['enabled' => true],
                'currencies' => [],
                'formatters' => [
                    'intl' => [
@@ -113,6 +115,8 @@ class ConfigurationTest extends TestCase
                        ]
                    ],
                ],
+               'form' => ['enabled' => true],
+               'twig' => ['enabled' => true],
            ],
        ];
 
@@ -154,6 +158,8 @@ class ConfigurationTest extends TestCase
                        ]
                    ],
                ],
+               'form' => ['enabled' => true],
+               'twig' => ['enabled' => true],
                'formatters' => [
                    'intl' => [
                        'number_locale' => 'en_US',
