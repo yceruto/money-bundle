@@ -24,8 +24,6 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
-            ->fixXmlConfig('currency')
-            ->fixXmlConfig('formatter')
             ->children()
                 ->arrayNode('currencies')
                     ->example(['EUR' => 2, 'USD' => 2])
