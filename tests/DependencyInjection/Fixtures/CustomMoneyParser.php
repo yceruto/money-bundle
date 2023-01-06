@@ -28,6 +28,8 @@ class CustomMoneyParser implements MoneyParser
 
         $decimal = trim(str_replace(CustomCurrencies::CODE, '', $money));
 
+        assert(is_numeric($decimal));
+
         return new Money($decimal, new Currency(CustomCurrencies::CODE));
     }
 }
