@@ -25,6 +25,26 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('form')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->info('Whether the Symfony Form integration is enabled.')
+                            ->defaultTrue()
+                        ->end()
+                    ->end()
+                ->end()
+
+                ->arrayNode('twig')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->info('Whether the Twig Engine integration is enabled.')
+                            ->defaultTrue()
+                        ->end()
+                    ->end()
+                ->end()
+
                 ->arrayNode('currencies')
                     ->example(['EUR' => 2, 'USD' => 2])
                     ->scalarPrototype()

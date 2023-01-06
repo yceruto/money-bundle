@@ -64,12 +64,12 @@ class MoneyExtension extends Extension
             $container->removeDefinition(IntlLocalizedDecimalParser::class);
         }
 
-        if (class_exists(Environment::class)) {
-            $loader->load('twig.php');
+        if (class_exists(Forms::class) && $config['form']['enabled']) {
+            $loader->load('form.php');
         }
 
-        if (class_exists(Forms::class)) {
-            $loader->load('form.php');
+        if (class_exists(Environment::class) && $config['twig']['enabled']) {
+            $loader->load('twig.php');
         }
     }
 }
