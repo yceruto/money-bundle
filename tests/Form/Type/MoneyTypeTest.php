@@ -67,6 +67,7 @@ class MoneyTypeTest extends TestCase
 
     /**
      * @dataProvider moneyOptionsProvider
+     * @param array<string, mixed> $options
      */
     public function testDeriveScaleDivisorOptionsFromCurrency(array $options, string $currency, int $scale, int $divisor): void
     {
@@ -77,6 +78,9 @@ class MoneyTypeTest extends TestCase
         self::assertSame($divisor, $options['divisor']);
     }
 
+    /**
+     * @return iterable<string, mixed>
+     */
     public function moneyOptionsProvider(): iterable
     {
         yield 'XOF' => [
@@ -122,6 +126,9 @@ class MoneyTypeTest extends TestCase
         self::assertSame($output, $this->formRenderer->searchAndRenderBlock($view, 'widget'));
     }
 
+    /**
+     * @return iterable<string, mixed>
+     */
     public function moneyRenderingProvider(): iterable
     {
         yield 'USD' => [

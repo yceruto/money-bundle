@@ -117,6 +117,10 @@ class MoneyExtensionTest extends TestCase
         self::assertEquals(Money::USD('212'), $converted);
     }
 
+    /**
+     * @param array<string> $publicServices
+     * @param array<mixed> $configs
+     */
     private function createContainer(array $publicServices = [], array $configs = [[]], \Closure $callback = null): ContainerInterface
     {
         $container = (new ContainerBuilder(new ParameterBag()))

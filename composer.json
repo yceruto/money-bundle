@@ -22,7 +22,8 @@
         "phpunit/phpunit": "^9.5",
         "symfony/form": "^6.2",
         "symfony/twig-bridge": "^6.2",
-        "twig/twig": "^3.5"
+        "twig/twig": "^3.5",
+        "phpstan/phpstan": "^1.9"
     },
     "config": {
         "preferred-install": "dist",
@@ -39,6 +40,7 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit tests"
+        "test": "vendor/bin/phpunit tests",
+        "static": "vendor/bin/phpstan analyse"
     }
 }
