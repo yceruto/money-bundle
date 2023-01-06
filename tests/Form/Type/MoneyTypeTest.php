@@ -77,6 +77,9 @@ class MoneyTypeTest extends TestCase
         self::assertSame($divisor, $options['divisor']);
     }
 
+    /**
+     * @return iterable<string, array{options: array, currency: string, scale: int, divisor: int}>
+     */
     public function moneyOptionsProvider(): iterable
     {
         yield 'XOF' => [
@@ -122,6 +125,9 @@ class MoneyTypeTest extends TestCase
         self::assertSame($output, $this->formRenderer->searchAndRenderBlock($view, 'widget'));
     }
 
+    /**
+     * @return iterable<string, array{amount: string, currency: string, output: string}>
+     */
     public function moneyRenderingProvider(): iterable
     {
         yield 'USD' => [

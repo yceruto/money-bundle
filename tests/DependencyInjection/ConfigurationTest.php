@@ -45,6 +45,9 @@ class ConfigurationTest extends TestCase
         self::assertSame($output, $config);
     }
 
+    /**
+     * @return iterable<string, array{input: array<array-key, array<array-key, mixed>>, output: array<string, mixed>}>
+     */
     public function configProvider(): iterable
     {
        yield 'empty config' => [

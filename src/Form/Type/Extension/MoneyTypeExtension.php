@@ -42,6 +42,6 @@ class MoneyTypeExtension extends AbstractTypeExtension
 
     public static function getExtendedTypes(): iterable
     {
-        yield MoneyType::class;
+        return [MoneyType::class];
     }
 }
