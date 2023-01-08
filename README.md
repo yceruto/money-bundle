@@ -38,7 +38,12 @@ The `Money\Currencies\CurrencyList` provider retrieves the currencies from the m
 The list consists of pairs of currency codes (strings) and subunits (integers). You can also use this configuration to 
 override the subunit for `Money\Currencies\ISOCurrencies`.
 
-## Formatters
+In many cases, you may not know the exact currency that you will be formatting or parsing. For these scenarios, we have 
+provided an aggregate formatter and parser service that allows you to configure multiple formatters/parsers and then 
+choose the most appropriate one based on the value. You can find more information about this in the Formatting and 
+Parsing section.
+
+## Formatting
 
 Money formatters can be helpful when you need to display a monetary value in a specific format. They allow you to convert a 
 money object into a human-readable string, making it easier to present financial data to users. By using formatters, you 
@@ -71,7 +76,7 @@ To register a custom formatter, you will need to implement the `Money\MoneyForma
 formatter to format monetary values in a specific currency. If your new formatter supports any currency, you can set the 
 `code` attribute to `*`. This will allow the formatter to be used for any currency.
 
-## Parsers
+## Parsing
 
 Money parsers can help automate the process of extracting monetary value from text, making it more efficient and accurate.
 
@@ -89,7 +94,7 @@ service, and it comes with default parsers.
 To register a custom parser, you need to implement the `Money\MoneyParser` interface and tag the service with `money.parser`. 
 This will enable you to use your custom parser to parse monetary values from a given text.
 
-## Exchanges
+## Currency Conversion
 
 To convert a `Money` instance from one currency to another, you need to use the `Money\Converter` service. This class relies 
 on the `Currencies` and `Exchange` services. The `Exchange` service returns a `CurrencyPair`, which represents a combination 
@@ -118,7 +123,7 @@ To configure the `Money\Exchange\FixedExchange` service, you can use the followi
 Note: Integration with third-party services like [Swap](https://github.com/florianv/swap) and [Exchanger](https://github.com/florianv/exchanger) 
 is currently outside the scope of this bundle.
 
-## Form
+## Symfony Form Integration
 
 The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` options from the `currency` value.
 
@@ -128,7 +133,7 @@ You can disable this integration by modifying the configuration:
         form:
             enabled: false
 
-## Twig
+## Twig Integration
 
 If you have installed `twig/twig` as your template engine, you can use the Twig filter provided to format your money objects:
 
