@@ -115,7 +115,8 @@ To configure the `Money\Exchange\FixedExchange` service, you can use the followi
                 EUR:
                     USD: '1.10'
 
-Note: Integration with third-party services is currently outside the scope of this bundle.
+Note: Integration with third-party services like [Swap](https://github.com/florianv/swap) and [Exchanger](https://github.com/florianv/exchanger) 
+is currently outside the scope of this bundle.
 
 ## Form
 
