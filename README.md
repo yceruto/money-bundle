@@ -1,14 +1,23 @@
 # MoneyBundle
 
-Symfony integration of the https://github.com/moneyphp/money library.
+Symfony integration of the https://github.com/moneyphp/money library. For more information on how the MoneyPHP library works, 
+please refer to its official documentation https://www.moneyphp.org.
 
-![ci](https://github.com/yceruto/money-bundle/actions/workflows/ci.yml/badge.svg)
+<p>
+    <a href="https://github.com/yceruto/money-bundle/actions"><img alt="GitHub Workflow Status (main)" src="https://img.shields.io/github/actions/workflow/status/yceruto/money-bundle/ci.yml?branch=main&label=tests&style=round-square"></a>
+    <a href="https://packagist.org/packages/yceruto/money-bundle"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/yceruto/money-bundle"></a>
+    <a href="https://packagist.org/packages/yceruto/money-bundle"><img alt="Latest Version" src="https://img.shields.io/packagist/v/yceruto/money-bundle"></a>
+    <a href="https://packagist.org/packages/yceruto/money-bundle"><img alt="License" src="https://img.shields.io/github/license/yceruto/money-bundle"></a>
+</p>
 
 ## Install
 
+This bundle is compatible with PHP 8.1 and above, as well as Symfony versions 5.4 and later.
+
     $ composer require yceruto/money-bundle
 
-It is important to ensure that the bundle is added to the `config/bundles.php` file of the project.
+If you are not using `symfony/flex`, make sure to add the bundle to the `config/bundles.php` file. This will ensure that it 
+is correctly registered and can be used in your application.
 
 ## Currencies
 
@@ -70,6 +79,9 @@ Use the following configuration to set default values for the current formatters
                 number_pattern: null
             bitcoin:
                 fraction_digits: 8
+
+During a normal Symfony request, the money formatter will consider the current request locale when formatting the money object. 
+This ensures that the formatted output is localized and suitable for the user's location.
 
 To register a custom formatter, you will need to implement the `Money\MoneyFormatter` interface and tag the service with 
 `money.formatter` and the currency `code` attribute that the formatter supports. This will allow you to use your custom 
@@ -144,3 +156,7 @@ You can disable this integration by modifying the configuration:
     money:
         twig:
             enabled: false
+
+## License
+
+This software is published under the [MIT License](LICENSE)
