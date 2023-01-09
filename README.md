@@ -157,6 +157,21 @@ You can disable this integration by modifying the configuration:
         twig:
             enabled: false
 
+## Data Transfer Object
+
+By design, the `Money\Money` value object is immutable, which means that it is not possible to change the original amount and currency 
+values after it is created. To address this, this bundle provides a DTO model called `MoneyDto` that can be used in various 
+situations, such as user inputs, API requests, form handling, validation, etc. This model allows you to modify the amount 
+and currency values, which can be useful in scenarios where you need to change these values before creating a new 
+`Money\Money` instance.
+
+    $dto = new MoneyDto('', '');
+    $dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
+    $dto = MoneyDto::fromAmount(100); // default EUR currency
+    $dto = MoneyDto::fromCurrency('USD); // default 0 amount
+
+    $money = $dto->toMoney(); // returns a new Money\Money instance
+
 ## License
 
 This software is published under the [MIT License](LICENSE)
