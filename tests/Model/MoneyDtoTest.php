@@ -16,6 +16,7 @@ namespace Yceruto\MoneyBundle\Tests\Model;
 use AssertionError;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 use Yceruto\MoneyBundle\Model\MoneyDto;
 
 class MoneyDtoTest extends TestCase
@@ -32,23 +33,19 @@ class MoneyDtoTest extends TestCase
         self::assertEquals(Money::CUP(1), (new MoneyDto(1, 'CUP'))->toMoney());
     }
 
-    public function testInvalidAmount(): void
+    public function testInvalidEmptyAmount(): void
     {
-        error_reporting(E_ALL);
-
-        $this->expectException(AssertionError::class);
-        $this->expectExceptionMessage('Amount must be an integer(ish) value');
+        $this->expectException(Throwable::class);
+        $this->expectExceptionMessage('Empty number is invalid');
 
         (new MoneyDto('', 'CUP'))->toMoney();
     }
 
-    public function testInvalidCurrency(): void
+    public function testInvalidNonNumericAmount(): void
     {
-        error_reporting(E_ALL);
+        $this->expectException(Throwable::class);
+        $this->expectExceptionMessage('Invalid digit a found');
 
-        $this->expectException(AssertionError::class);
-        $this->expectExceptionMessage('Currency must be a non-empty-string value');
-
-        (new MoneyDto(1, ''))->toMoney();
+        (new MoneyDto('abc', 'CUP'))->toMoney();
     }
 }

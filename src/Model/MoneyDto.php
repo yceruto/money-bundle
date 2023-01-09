@@ -41,7 +41,8 @@ class MoneyDto
 
     public function toMoney(): Money
     {
-        assert(is_numeric($this->amount), 'Amount must be an integer(ish) value');
+        assert('' !== $this->amount, 'Empty number is invalid');
+        assert(is_numeric($this->amount), 'Invalid digit a found');
         assert('' !== $this->currency, 'Currency must be a non-empty-string value');
 
         return new Money($this->amount, new Currency($this->currency));
