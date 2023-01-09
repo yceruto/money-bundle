@@ -23,14 +23,27 @@ class MoneyDto
         return new self($money->getAmount(), $money->getCurrency()->getCode());
     }
 
-    public function toMoney(): Money
+    public static function fromCurrency(string $currency): self
     {
-        return new Money($this->amount, new Currency($this->currency));
+        return new self(0, $currency);
+    }
+
+    public static function fromAmount(int|string $amount): self
+    {
+        return new self($amount);
     }
 
     public function __construct(
-        public string $amount = '',
-        public string $currency = '',
+        public int|string $amount = 0,
+        public string $currency = 'EUR',
     ) {
+    }
+
+    public function toMoney(): Money
+    {
+        assert(is_numeric($this->amount), 'Amount must be an integer(ish) value');
+        assert('' !== $this->currency, 'Currency must be a non-empty-string value');
+
+        return new Money($this->amount, new Currency($this->currency));
     }
 }

@@ -18,12 +18,6 @@
     </projectFiles>
 
     <issueHandlers>
-        <ArgumentTypeCoercion>
-            <errorLevel type="suppress">
-                <file name="src/Model/MoneyDto.php"/>
-            </errorLevel>
-        </ArgumentTypeCoercion>
-        
         <MixedArrayAccess>
             <errorLevel type="suppress">
                 <file name="src/DependencyInjection/MoneyExtension.php"/>
