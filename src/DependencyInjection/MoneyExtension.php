@@ -23,6 +23,7 @@ use Money\Parser\IntlMoneyParser;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Form\Forms;
 use Twig\Environment;
@@ -30,8 +31,26 @@ use Yceruto\MoneyBundle\DependencyInjection\Compiler\CurrenciesPass;
 use Yceruto\MoneyBundle\DependencyInjection\Compiler\FormattersPass;
 use Yceruto\MoneyBundle\Formatter\IntlNumberFormatterFactory;
 
-class MoneyExtension extends Extension
+class MoneyExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container): void
+    {
+        if ($container->hasExtension('doctrine')) {
+            $container->prependExtensionConfig('doctrine', [
+                'orm' => [
+                    'mappings' => [
+                        'Money' => [
+                            'is_bundle' => false,
+                            'type' => 'xml',
+                            'dir' => \dirname(__DIR__, 2).'/config/doctrine/mapping/',
+                            'prefix' => 'Money',
+                        ],
+                    ],
+                ],
+            ]);
+        }
+    }
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration($this->getConfiguration([], $container), $configs);
