@@ -10,6 +10,19 @@ please refer to its official documentation https://www.moneyphp.org.
     <a href="https://packagist.org/packages/yceruto/money-bundle"><img alt="License" src="https://img.shields.io/github/license/yceruto/money-bundle"></a>
 </p>
 
+## Table of Contents
+1. [Install](#install)
+2. [Currencies](#currencies)
+3. [Formatting](#formatting)
+4. [Parsing](#parsing)
+5. [Currency Conversion](#currency-conversion)
+6. [Data Transfer Object](#data-transfer-object)
+7. [Integrations](#integrations)
+   * [Form](#form)
+   * [Twig](#twig)
+   * [Doctrine](#doctrine)
+8. [License](#license)
+
 ## Install
 
 This bundle is compatible with PHP 8.1 and above, as well as Symfony versions 5.4 and later.
@@ -135,7 +148,24 @@ To configure the `Money\Exchange\FixedExchange` service, you can use the followi
 Note: Integration with third-party services like [Swap](https://github.com/florianv/swap) and [Exchanger](https://github.com/florianv/exchanger) 
 is currently outside the scope of this bundle.
 
-## Symfony Form Integration
+## Data Transfer Object
+
+By design, the `Money\Money` value object is immutable, which means that it is not possible to change the original amount and currency
+values after it is created. To address this, this bundle provides a DTO model called `MoneyDto` that can be used in various
+situations, such as user inputs, API requests, form handling, validation, etc. This model allows you to modify the amount
+and currency values, which can be useful in scenarios where you need to change these values before creating a new
+`Money\Money` instance.
+
+    $dto = new MoneyDto('', '');
+    $dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
+    $dto = MoneyDto::fromAmount(100); // default EUR currency
+    $dto = MoneyDto::fromCurrency('USD); // default 0 amount
+
+    $money = $dto->toMoney(); // returns a new Money\Money instance
+
+## Integrations
+
+### Form
 
 The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` options from the `currency` value.
 
@@ -145,7 +175,7 @@ You can disable this integration by modifying the configuration:
         form:
             enabled: false
 
-## Twig Integration
+### Twig
 
 If you have installed `twig/twig` as your template engine, you can use the Twig filter provided to format your money objects:
 
@@ -157,7 +187,7 @@ You can disable this integration by modifying the configuration:
         twig:
             enabled: false
 
-## Doctrine Integration
+### Doctrine
 
 Doctrine allows you to map an embedded object to a database column using the `Embedded` attribute and this bundle provides 
 the `Money\Money` ORM mapping definitions for use with the Doctrine bundle, if it is enabled. This means that you can use 
@@ -177,21 +207,6 @@ You can also use the fields of embedded classes that have been mapped using Doct
 queries, just as if they were declared in the Product class itself:
 
     SELECT p FROM Product p WHERE p.price.amount > 1000 AND p.price.currency.code = 'EUR' 
-
-## Data Transfer Object
-
-By design, the `Money\Money` value object is immutable, which means that it is not possible to change the original amount and currency 
-values after it is created. To address this, this bundle provides a DTO model called `MoneyDto` that can be used in various 
-situations, such as user inputs, API requests, form handling, validation, etc. This model allows you to modify the amount 
-and currency values, which can be useful in scenarios where you need to change these values before creating a new 
-`Money\Money` instance.
-
-    $dto = new MoneyDto('', '');
-    $dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
-    $dto = MoneyDto::fromAmount(100); // default EUR currency
-    $dto = MoneyDto::fromCurrency('USD); // default 0 amount
-
-    $money = $dto->toMoney(); // returns a new Money\Money instance
 
 ## License
 
