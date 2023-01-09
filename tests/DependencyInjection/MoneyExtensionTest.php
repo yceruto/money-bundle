@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace Yceruto\MoneyBundle\Tests\DependencyInjection;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Money\Converter;
 use Money\Currency;
 use Money\Currencies\AggregateCurrencies;
@@ -126,13 +130,45 @@ class MoneyExtensionTest extends TestCase
         self::assertEquals(Money::EUR('200'), $converted);
     }
 
+    public function testMoneyDoctrineMapping(): void
+    {
+        $container = $this->createContainer([], [[]], static function (ContainerBuilder $container) {
+            $container->registerExtension(new DoctrineExtension());
+            $container->loadFromExtension('doctrine', [
+                'dbal' => [],
+            ]);
+
+            (new MoneyExtension())->prepend($container);
+        });
+
+        /** @var Registry $doctrine */
+        $doctrine = $container->get('doctrine');
+        /** @var EntityManager $manager */
+        $manager = $doctrine->getManager();
+        /** @var ClassMetadata $metadata */
+        $metadata = $manager->getClassMetadata(Money::class);
+
+        self::assertTrue($metadata->isEmbeddedClass);
+        self::assertSame(Money::class, $metadata->getName());
+        self::assertSame(['amount', 'currency.code'], $metadata->getFieldNames());
+        self::assertSame('string', $metadata->getTypeOfField('amount'));
+        self::assertSame('string', $metadata->getTypeOfField('currency.code'));
+        self::assertCount(1, $metadata->embeddedClasses);
+        self::assertSame(Currency::class, $metadata->embeddedClasses['currency']['class']);
+    }
+
     /**
      * @param array<class-string|string>                $publicServices
      * @param array<array-key, array<array-key, mixed>> $configs
      */
     private function createContainer(array $publicServices = [], array $configs = [[]], \Closure $callback = null): ContainerInterface
     {
-        $container = (new ContainerBuilder(new ParameterBag()))
+        $parameters = [
+            'kernel.debug' => true,
+            'kernel.bundles' => [],
+            'kernel.cache_dir' => sys_get_temp_dir(),
+        ];
+        $container = (new ContainerBuilder(new ParameterBag($parameters)))
             ->addCompilerPass(new CurrenciesPass())
             ->addCompilerPass(new FormattersPass())
             ->addCompilerPass(new ParsersPass())

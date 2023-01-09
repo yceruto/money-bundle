@@ -20,6 +20,8 @@
     "require-dev": {
         "ext-gmp": "*",
         "ext-intl": "*",
+        "doctrine/doctrine-bundle": "^2.8",
+        "doctrine/orm": "^2.14",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.18.4",
         "psalm/plugin-symfony": "^5.0",

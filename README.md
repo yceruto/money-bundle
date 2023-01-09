@@ -157,6 +157,27 @@ You can disable this integration by modifying the configuration:
         twig:
             enabled: false
 
+## Doctrine Integration
+
+Doctrine allows you to map an embedded object to a database column using the `Embedded` attribute and this bundle provides 
+the `Money\Money` ORM mapping definitions for use with the Doctrine bundle, if it is enabled. This means that you can use 
+Doctrine's entity manager to persist and retrieve your entities with the embedded money values, without having to manually 
+configure the ORM mappings. This can simplify your development process and allow you to focus on other aspects of your application:
+
+    use Doctrine\ORM\Mapping\Embedded;
+    use Money\Money;
+
+    class Product
+    {
+        #[Embedded]
+        private Money $price;
+    }
+
+You can also use the fields of embedded classes that have been mapped using Doctrine in DQL (Doctrine Query Language) 
+queries, just as if they were declared in the Product class itself:
+
+    SELECT p FROM Product p WHERE p.price.amount > 1000 AND p.price.currency.code = 'EUR' 
+
 ## Data Transfer Object
 
 By design, the `Money\Money` value object is immutable, which means that it is not possible to change the original amount and currency 
