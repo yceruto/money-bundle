@@ -30,20 +30,20 @@ class MoneyDto
 
     public static function fromAmount(int|string $amount): self
     {
-        return new self($amount);
+        return new self($amount, 'EUR');
     }
 
     public function __construct(
-        public int|string $amount = 0,
-        public string $currency = 'EUR',
+        public int|string|null $amount = null,
+        public ?string $currency = null,
     ) {
     }
 
     public function toMoney(): Money
     {
-        assert('' !== $this->amount, 'Empty number is invalid');
+        assert(null !== $this->amount && '' !== $this->amount, 'Empty number is invalid');
         assert(is_numeric($this->amount), 'Invalid digit a found');
-        assert('' !== $this->currency, 'Currency must be a non-empty-string value');
+        assert(null !== $this->currency && '' !== $this->currency, 'Currency must be a non-empty-string value');
 
         return new Money($this->amount, new Currency($this->currency));
     }
