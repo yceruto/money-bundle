@@ -168,7 +168,7 @@ and currency values, which can be useful in scenarios where you need to change t
  $dto = new MoneyDto(); // default null for amount and currency properties
  $dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
  $dto = MoneyDto::fromAmount(100); // default EUR currency
- $dto = MoneyDto::fromCurrency('USD); // default 0 amount
+ $dto = MoneyDto::fromCurrency('USD'); // default 0 amount
 
  $money = $dto->toMoney(); // returns a new Money\Money instance
 ```
@@ -196,11 +196,14 @@ You can disable this integration by modifying the configuration:
 
 ### Twig
 
-If you have installed `twig/twig` as your template engine, you can use the Twig filter provided to format your money objects:
+If you have installed `twig/twig` as your template engine, you can use the Twig filter provided to format your money objects
+directly in any template page:
 
 ```twig
  {{ money|money_format }}
 ```
+
+It will follow the same behavior as the `Money\Formatter\MoneyFormatter` service.
 
 You can disable this integration by modifying the configuration:
 
