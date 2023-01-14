@@ -17,7 +17,7 @@ please refer to its official documentation https://www.moneyphp.org.
 4. [Parsing](#parsing)
 5. [Currency Conversion](#currency-conversion)
 6. [Data Transfer Object](#data-transfer-object)
-7. [Integrations](#integrations)
+7. [Other Integrations](#other-integrations)
    * [Form](#form)
    * [Twig](#twig)
    * [Doctrine](#doctrine)
@@ -27,7 +27,9 @@ please refer to its official documentation https://www.moneyphp.org.
 
 This bundle is compatible with PHP 8.1 and above, as well as Symfony versions 5.4 and later.
 
-    $ composer require yceruto/money-bundle
+```shell
+ $ composer require yceruto/money-bundle
+```
 
 If you are not using `symfony/flex`, make sure to add the bundle to the `config/bundles.php` file. This will ensure that it 
 is correctly registered and can be used in your application.
@@ -53,9 +55,11 @@ by implementing the `Money\Currencies` interface and tagging it with `money.curr
 
 The `Money\Currencies\CurrencyList` provider retrieves the currencies from the money configuration:
 
-    money:
-        currencies:
-            FOO: 2
+```yaml
+ money:
+     currencies:
+         FOO: 2
+```
 
 The list consists of pairs of currency codes (strings) and subunits (integers). You can also use this configuration to 
 override the subunit for `Money\Currencies\ISOCurrencies`.
@@ -84,14 +88,16 @@ service, and it comes with default formatters.
 
 Use the following configuration to set default values for the current formatters:
 
-    money:
-        formatters:
-            intl:
-                number_locale: 'en_US'
-                number_style: 2 # \NumberFormatter::CURRENCY
-                number_pattern: null
-            bitcoin:
-                fraction_digits: 8
+```yaml
+ money:
+     formatters:
+         intl:
+             number_locale: 'en_US'
+             number_style: 2 # \NumberFormatter::CURRENCY
+             number_pattern: null
+         bitcoin:
+             fraction_digits: 8
+```
 
 During a normal Symfony request, the money formatter will consider the current request locale when formatting the money object. 
 This ensures that the formatted output is localized and suitable for the user's location.
@@ -139,11 +145,13 @@ the reverse conversion ratio.
 
 To configure the `Money\Exchange\FixedExchange` service, you can use the following configuration:
 
-    money:
-        exchanges:
-            fixed:
-                EUR:
-                    USD: '1.10'
+```yaml
+ money:
+     exchanges:
+         fixed:
+             EUR:
+                 USD: '1.10'
+```
 
 Note: Integration with third-party services like [Swap](https://github.com/florianv/swap) and [Exchanger](https://github.com/florianv/exchanger) 
 is currently outside the scope of this bundle.
@@ -156,36 +164,51 @@ situations, such as user inputs, API requests, form handling, validation, etc. T
 and currency values, which can be useful in scenarios where you need to change these values before creating a new
 `Money\Money` instance.
 
-    $dto = new MoneyDto('', '');
-    $dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
-    $dto = MoneyDto::fromAmount(100); // default EUR currency
-    $dto = MoneyDto::fromCurrency('USD); // default 0 amount
+```php
+ $dto = new MoneyDto(); // default null for amount and currency properties
+ $dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
+ $dto = MoneyDto::fromAmount(100); // default EUR currency
+ $dto = MoneyDto::fromCurrency('USD); // default 0 amount
 
-    $money = $dto->toMoney(); // returns a new Money\Money instance
+ $money = $dto->toMoney(); // returns a new Money\Money instance
+```
 
-## Integrations
+## Other Integrations
 
 ### Form
 
-The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` options from the `currency` value.
+The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` options from the `currency` value:
+
+```php
+$formBuilder->add('price', MoneyType::class, ['currency' => 'CUP'])
+```
+
+It is not supposed to work directly with the `Money\Money` object, as is typical, it expects a numeric property to be 
+associated with this form field.
 
 You can disable this integration by modifying the configuration:
 
-    money:
-        form:
-            enabled: false
+```yaml
+ money:
+     form:
+         enabled: false
+```
 
 ### Twig
 
 If you have installed `twig/twig` as your template engine, you can use the Twig filter provided to format your money objects:
 
-    {{ money|money_format }}
+```twig
+ {{ money|money_format }}
+```
 
 You can disable this integration by modifying the configuration:
 
-    money:
-        twig:
-            enabled: false
+```yaml
+ money:
+     twig:
+         enabled: false
+```
 
 ### Doctrine
 
@@ -194,19 +217,23 @@ the `Money\Money` ORM mapping definitions for use with the Doctrine bundle, if i
 Doctrine's entity manager to persist and retrieve your entities with the embedded money values, without having to manually 
 configure the ORM mappings. This can simplify your development process and allow you to focus on other aspects of your application:
 
-    use Doctrine\ORM\Mapping\Embedded;
-    use Money\Money;
+```php
+ use Doctrine\ORM\Mapping\Embedded;
+ use Money\Money;
 
-    class Product
-    {
-        #[Embedded]
-        private Money $price;
-    }
+ class Product
+ {
+     #[Embedded]
+     private Money $price;
+ }
+ ```
 
 You can also use the fields of embedded classes that have been mapped using Doctrine in DQL (Doctrine Query Language) 
 queries, just as if they were declared in the Product class itself:
 
-    SELECT p FROM Product p WHERE p.price.amount > 1000 AND p.price.currency.code = 'EUR' 
+```sql
+SELECT p FROM Product p WHERE p.price.amount > 1000 AND p.price.currency.code = 'EUR' 
+```
 
 ## License
 
