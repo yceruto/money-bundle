@@ -45,6 +45,16 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
 
+                ->arrayNode('doctrine')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enabled')
+                            ->info('Whether the Doctrine integration is enabled.')
+                            ->defaultTrue()
+                        ->end()
+                    ->end()
+                ->end()
+
                 ->arrayNode('currencies')
                     ->example(['EUR' => 2, 'USD' => 2])
                     ->scalarPrototype()
