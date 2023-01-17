@@ -238,6 +238,14 @@ queries, just as if they were declared in the Product class itself:
 SELECT p FROM Product p WHERE p.price.amount > 1000 AND p.price.currency.code = 'EUR' 
 ```
 
+You can disable this integration by modifying the configuration:
+
+```yaml
+ money:
+     doctrine:
+         enabled: false
+```
+
 ## License
 
 This software is published under the [MIT License](LICENSE)
