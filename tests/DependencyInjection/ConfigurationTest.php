@@ -55,6 +55,7 @@ class ConfigurationTest extends TestCase
            'output' => [
                'form' => ['enabled' => true],
                'twig' => ['enabled' => true],
+               'doctrine' => ['enabled' => true],
                'currencies' => [],
                'formatters' => [
                    'intl' => [
@@ -117,6 +118,7 @@ class ConfigurationTest extends TestCase
                ],
                'form' => ['enabled' => true],
                'twig' => ['enabled' => true],
+               'doctrine' => ['enabled' => true],
            ],
        ];
 
@@ -160,6 +162,7 @@ class ConfigurationTest extends TestCase
                ],
                'form' => ['enabled' => true],
                'twig' => ['enabled' => true],
+               'doctrine' => ['enabled' => true],
                'formatters' => [
                    'intl' => [
                        'number_locale' => 'en_US',

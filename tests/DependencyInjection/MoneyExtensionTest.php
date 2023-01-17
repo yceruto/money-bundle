@@ -137,8 +137,6 @@ class MoneyExtensionTest extends TestCase
             $container->loadFromExtension('doctrine', [
                 'dbal' => [],
             ]);
-
-            (new MoneyExtension())->prepend($container);
         });
 
         /** @var Registry $doctrine */
