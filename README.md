@@ -231,6 +231,18 @@ configure the ORM mappings. This can simplify your development process and allow
  }
  ```
 
+Important: To ensure proper processing of the `Money\Money` mapping, it is important to register this bundle in `bundles.php`
+before registering the `DoctrineBundle`.
+
+```php
+return [
+    // ...
+    Yceruto\MoneyBundle\MoneyBundle::class => ['all' => true],
+    Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
+    // ...
+];
+```
+
 You can also use the fields of embedded classes that have been mapped using Doctrine in DQL (Doctrine Query Language) 
 queries, just as if they were declared in the Product class itself:
 
