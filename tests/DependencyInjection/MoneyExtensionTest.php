@@ -149,7 +149,7 @@ class MoneyExtensionTest extends TestCase
         self::assertTrue($metadata->isEmbeddedClass);
         self::assertSame(Money::class, $metadata->getName());
         self::assertSame(['amount', 'currency.code'], $metadata->getFieldNames());
-        self::assertSame('string', $metadata->getTypeOfField('amount'));
+        self::assertSame('integer', $metadata->getTypeOfField('amount'));
         self::assertSame('string', $metadata->getTypeOfField('currency.code'));
         self::assertCount(1, $metadata->embeddedClasses);
         self::assertSame(Currency::class, $metadata->embeddedClasses['currency']['class']);

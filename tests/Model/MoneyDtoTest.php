@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Yceruto\MoneyBundle\Tests\Model;
 
-use AssertionError;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
 use Throwable;
