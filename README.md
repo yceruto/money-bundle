@@ -50,8 +50,8 @@ The following currencies classes are available as services:
 The `Currencies` interface is an alias for the `Money\Currencies\AggregateCurrencies` service, which comes with default
 currency providers.
 
-The providers are injected into the `AggregateCurrencies` service in the specified order, and you can add more providers 
-by implementing the `Money\Currencies` interface and tagging it with `money.currencies` as a service.
+The providers are injected into the `AggregateCurrencies` service in the specified order. If you want to add more providers, 
+you need to implement the `Money\Currencies` interface and tag the service with `money.currencies`.
 
 The `Money\Currencies\CurrencyList` provider retrieves the currencies from the money configuration:
 
@@ -99,7 +99,7 @@ Use the following configuration to set default values for the current formatters
              fraction_digits: 8
 ```
 
-During a normal Symfony request, the money formatter will consider the current request locale when formatting the money object. 
+During a Symfony request, the money formatter will consider the current request locale when formatting the money object. 
 This ensures that the formatted output is localized and suitable for the user's location.
 
 To register a custom formatter, you will need to implement the `Money\MoneyFormatter` interface and tag the service with 
@@ -122,7 +122,7 @@ The following parser classes are available as services:
 You can use the `Money\MoneyParser` interface as a dependency for any service because it is an alias for the `Money\Parser\AggregateMoneyParser`
 service, and it comes with default parsers.
 
-To register a custom parser, you need to implement the `Money\MoneyParser` interface and tag the service with `money.parser`. 
+To register a custom parser, you should implement the `Money\MoneyParser` interface and tag the service with `money.parser`. 
 This will enable you to use your custom parser to parse monetary values from a given text.
 
 ## Currency Conversion
@@ -183,8 +183,8 @@ The Symfony `MoneyType` will be updated to derive the `scale` and `divisor` opti
 $formBuilder->add('price', MoneyType::class, ['currency' => 'CUP'])
 ```
 
-It is not supposed to work directly with the `Money\Money` object, as is typical, it expects a numeric property to be 
-associated with this form field.
+Contrary to typical usage, it is not supposed to work directly with the `Money\Money` object. Instead, it expects a 
+numeric property to be associated with this form field.
 
 You can disable this integration by modifying the configuration:
 
@@ -244,7 +244,7 @@ return [
 ```
 
 You can also use the fields of embedded classes that have been mapped using Doctrine in DQL (Doctrine Query Language) 
-queries, just as if they were declared in the Product class itself:
+queries. These can be used just as if they were declared in the Product class itself:
 
 ```sql
 SELECT p FROM Product p WHERE p.price.amount > 1000 AND p.price.currency.code = 'EUR' 
