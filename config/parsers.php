@@ -45,7 +45,7 @@ return static function (ContainerConfigurator $container) {
             ->tag('money.parser')
 
         ->set(BitcoinMoneyParser::class)
-            ->args([param('.money_formatter_fraction_digits')])
+            ->args([param('money_formatter_fraction_digits')])
             ->tag('money.parser')
 
         ->alias(MoneyParser::class, AggregateMoneyParser::class)

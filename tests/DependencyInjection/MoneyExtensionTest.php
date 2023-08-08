@@ -52,8 +52,8 @@ class MoneyExtensionTest extends TestCase
                 ->addTag('money.currencies');
         });
 
-        self::assertTrue($container->hasParameter('.money_currencies'));
-        self::assertSame(['FOO' => 3], $container->getParameter('.money_currencies'));
+        self::assertTrue($container->hasParameter('money_currencies'));
+        self::assertSame(['FOO' => 3], $container->getParameter('money_currencies'));
 
         $currencies = $container->get(AggregateCurrencies::class);
 

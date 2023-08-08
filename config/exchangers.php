@@ -29,7 +29,7 @@ return static function (ContainerConfigurator $container) {
             ])
 
         ->set(FixedExchange::class)
-            ->args([param('.money_exchange_fixed')])
+            ->args([param('money_exchange_fixed')])
 
         ->set(IndirectExchange::class)
             ->args([

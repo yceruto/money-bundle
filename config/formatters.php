@@ -29,9 +29,9 @@ return static function (ContainerConfigurator $container) {
         ->set(IntlNumberFormatterFactory::class)
             ->args([
                 service('request_stack')->nullOnInvalid(),
-                param('.money_formatter_number_locale'),
-                param('.money_formatter_number_style'),
-                param('.money_formatter_number_pattern'),
+                param('money_formatter_number_locale'),
+                param('money_formatter_number_style'),
+                param('money_formatter_number_pattern'),
             ])
 
         ->set('money.intl.number_formatter', \NumberFormatter::class)
@@ -60,7 +60,7 @@ return static function (ContainerConfigurator $container) {
 
         ->set(BitcoinMoneyFormatter::class)
             ->args([
-                param('.money_formatter_fraction_digits'),
+                param('money_formatter_fraction_digits'),
                 service(Currencies::class),
             ])
             ->tag(FormattersPass::TAG, ['code' => BitcoinCurrencies::CODE])

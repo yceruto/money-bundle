@@ -27,7 +27,7 @@ return static function (ContainerConfigurator $container) {
             ->args([abstract_arg('currencies')])
 
         ->set(CurrencyList::class)
-            ->args([param('.money_currencies')])
+            ->args([param('money_currencies')])
             ->tag(CurrenciesPass::TAG)
 
         ->set(ISOCurrencies::class)
