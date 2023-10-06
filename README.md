@@ -56,9 +56,10 @@ you need to implement the `Money\Currencies` interface and tag the service with 
 The `Money\Currencies\CurrencyList` provider retrieves the currencies from the money configuration:
 
 ```yaml
- money:
-     currencies:
-         FOO: 2
+# config/packages/money.yaml
+money:
+    currencies:
+        FOO: 2
 ```
 
 The list consists of pairs of currency codes (strings) and subunits (integers). You can also use this configuration to 
@@ -89,14 +90,15 @@ service, and it comes with default formatters.
 Use the following configuration to set default values for the current formatters:
 
 ```yaml
- money:
-     formatters:
-         intl:
-             number_locale: 'en_US'
-             number_style: 2 # \NumberFormatter::CURRENCY
-             number_pattern: null
-         bitcoin:
-             fraction_digits: 8
+# config/packages/money.yaml
+money:
+    formatters:
+        intl:
+            number_locale: 'en_US'
+            number_style: 2 # \NumberFormatter::CURRENCY
+            number_pattern: null
+        bitcoin:
+            fraction_digits: 8
 ```
 
 During a Symfony request, the money formatter will consider the current request locale when formatting the money object. 
@@ -146,11 +148,12 @@ the reverse conversion ratio.
 To configure the `Money\Exchange\FixedExchange` service, you can use the following configuration:
 
 ```yaml
- money:
-     exchanges:
-         fixed:
-             EUR:
-                 USD: '1.10'
+# config/packages/money.yaml
+money:
+    exchanges:
+        fixed:
+            EUR:
+                USD: '1.10'
 ```
 
 Note: Integration with third-party services like [Swap](https://github.com/florianv/swap) and [Exchanger](https://github.com/florianv/exchanger) 
@@ -165,12 +168,12 @@ and currency values, which can be useful in scenarios where you need to change t
 `Money\Money` instance.
 
 ```php
- $dto = new MoneyDto(); // default null for amount and currency properties
- $dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
- $dto = MoneyDto::fromAmount(100); // default EUR currency
- $dto = MoneyDto::fromCurrency('USD'); // default 0 amount
+$dto = new MoneyDto(); // default null for amount and currency properties
+$dto = MoneyDto::fromMoney(Money::EUR(100)); // returns a new DTO instance
+$dto = MoneyDto::fromAmount(100); // default EUR currency
+$dto = MoneyDto::fromCurrency('USD'); // default 0 amount
 
- $money = $dto->toMoney(); // returns a new Money\Money instance
+$money = $dto->toMoney(); // returns a new Money\Money instance
 ```
 
 ## Other Integrations
@@ -189,9 +192,10 @@ numeric property to be associated with this form field.
 You can disable this integration by modifying the configuration:
 
 ```yaml
- money:
-     form:
-         enabled: false
+# config/packages/money.yaml
+money:
+    form:
+        enabled: false
 ```
 
 ### Twig
@@ -200,7 +204,7 @@ If you have installed `twig/twig` as your template engine, you can use the Twig 
 directly in any template page:
 
 ```twig
- {{ money|money_format }}
+{{ money|money_format }}
 ```
 
 It will follow the same behavior as the `Money\Formatter\MoneyFormatter` service.
@@ -208,9 +212,10 @@ It will follow the same behavior as the `Money\Formatter\MoneyFormatter` service
 You can disable this integration by modifying the configuration:
 
 ```yaml
- money:
-     twig:
-         enabled: false
+# config/packages/money.yaml
+money:
+    twig:
+        enabled: false
 ```
 
 ### Doctrine
@@ -221,20 +226,21 @@ Doctrine's entity manager to persist and retrieve your entities with the embedde
 configure the ORM mappings. This can simplify your development process and allow you to focus on other aspects of your application:
 
 ```php
- use Doctrine\ORM\Mapping\Embedded;
- use Money\Money;
+use Doctrine\ORM\Mapping\Embedded;
+use Money\Money;
 
- class Product
- {
-     #[Embedded]
-     private Money $price;
- }
- ```
+class Product
+{
+    #[Embedded]
+    private Money $price;
+}
+```
 
 Important: To ensure proper processing of the `Money\Money` mapping, it is important to register this bundle in `bundles.php`
 before registering the `DoctrineBundle`.
 
 ```php
+// config/bundles.php
 return [
     // ...
     Yceruto\MoneyBundle\MoneyBundle::class => ['all' => true],
@@ -253,9 +259,10 @@ SELECT p FROM Product p WHERE p.price.amount > 1000 AND p.price.currency.code = 
 You can disable this integration by modifying the configuration:
 
 ```yaml
- money:
-     doctrine:
-         enabled: false
+# config/packages/money.yaml
+money:
+    doctrine:
+        enabled: false
 ```
 
 ## License
