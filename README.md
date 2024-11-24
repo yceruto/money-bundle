@@ -28,7 +28,7 @@ please refer to its official documentation https://www.moneyphp.org.
 This bundle is compatible with PHP 8.1 and above, as well as Symfony versions 5.4 and later.
 
 ```shell
- $ composer require yceruto/money-bundle
+composer require yceruto/money-bundle
 ```
 
 If you are not using `symfony/flex`, make sure to add the bundle to the `config/bundles.php` file. This will ensure that it 
