@@ -159,7 +159,7 @@ class MoneyExtensionTest extends TestCase
      * @param array<class-string|string>                $publicServices
      * @param array<array-key, array<array-key, mixed>> $configs
      */
-    private function createContainer(array $publicServices = [], array $configs = [[]], \Closure $callback = null): ContainerInterface
+    private function createContainer(array $publicServices = [], array $configs = [[]], ?\Closure $callback = null): ContainerInterface
     {
         $parameters = [
             'kernel.debug' => true,

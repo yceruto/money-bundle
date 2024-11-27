@@ -22,7 +22,7 @@ jobs:
         extensions: bcmath, gmp, intl, dom, mbstring
 
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Download dependencies
       run: composer update --prefer-stable --prefer-dist --no-interaction --no-progress --no-suggest --prefer-lowest --classmap-authoritative
@@ -38,6 +38,8 @@ jobs:
         php:
           - 8.1
           - 8.2
+          - 8.3
+          - 8.4
 
     steps:
     - name: Set up PHP
@@ -48,7 +50,10 @@ jobs:
         ini-values: zend.assertions=1
 
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Remove psalm
+      run: composer remove psalm/plugin-phpunit psalm/plugin-symfony vimeo/psalm --dev
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -74,7 +79,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
