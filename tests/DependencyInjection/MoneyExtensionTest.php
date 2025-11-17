@@ -165,6 +165,7 @@ class MoneyExtensionTest extends TestCase
             'kernel.debug' => true,
             'kernel.bundles' => [],
             'kernel.cache_dir' => sys_get_temp_dir(),
+            'kernel.build_dir' => sys_get_temp_dir(),
         ];
         $container = (new ContainerBuilder(new ParameterBag($parameters)))
             ->addCompilerPass(new CurrenciesPass())
