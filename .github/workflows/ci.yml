@@ -53,9 +53,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Remove psalm
-      run: composer remove psalm/plugin-phpunit psalm/plugin-symfony vimeo/psalm --dev
-
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
@@ -74,8 +71,8 @@ jobs:
     - name: Run tests
       run: composer test
 
-  psalm:
-    name: Psalm
+  phpstan:
+    name: PHPStan
     runs-on: ubuntu-latest
 
     steps:
@@ -91,5 +88,5 @@ jobs:
     - name: Download dependencies
       run: composer install --classmap-authoritative
 
-    - name: Psalm
-      run: vendor/bin/psalm
+    - name: PHPStan
+      run: vendor/bin/phpstan analyse
