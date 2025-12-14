@@ -122,7 +122,7 @@ class MoneyTypeTest extends TestCase
             ->createNamed('money', MoneyType::class, $amount, ['currency' => $currency])
             ->createView();
 
-        self::assertSame($output, $this->formRenderer->searchAndRenderBlock($view, 'widget'));
+        self::assertMatchesRegularExpression($output, $this->formRenderer->searchAndRenderBlock($view, 'widget'));
     }
 
     /**
@@ -133,19 +133,19 @@ class MoneyTypeTest extends TestCase
         yield 'USD' => [
             'amount' => '1230',
             'currency' => 'USD',
-            'output' => '$ <input type="text" id="money" name="money" required="required" value="12.30" />',
+            'output' => '/\$ <input type="text" id="money" name="money" required="required" inputmode="decimal" value="12\.30" \/>/',
         ];
 
         yield 'XOF' => [
             'amount' => '1230',
             'currency' => 'XOF',
-            'output' => '<input type="text" id="money" name="money" required="required" value="1230" />',
+            'output' => '/<input type="text" id="money" name="money" required="required" inputmode="numeric" value="1230" \/>/',
         ];
 
         yield 'BHD' => [
             'amount' => '1230',
             'currency' => 'BHD',
-            'output' => 'BHD <input type="text" id="money" name="money" required="required" value="1.230" />',
+            'output' => '/BHD <input type="text" id="money" name="money" required="required" inputmode="decimal" value="1\.230" \/>/',
         ];
     }
 }

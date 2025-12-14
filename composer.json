@@ -18,18 +18,16 @@
         "symfony/http-kernel": "^5.4|^6.0|^7.0|^8.0"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
         "ext-gmp": "*",
         "ext-intl": "*",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/orm": "^2.14",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.5",
-        "psalm/plugin-phpunit": "^0.18.4",
-        "psalm/plugin-symfony": "^5.0",
+        "roave/security-advisories": "dev-latest",
         "symfony/form": "^6.2",
         "symfony/twig-bridge": "^6.2",
-        "twig/twig": "^3.5",
-        "vimeo/psalm": "^5.4"
+        "twig/twig": "^3.5"
     },
     "config": {
         "preferred-install": "dist",
