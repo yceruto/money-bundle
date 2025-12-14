@@ -5,7 +5,7 @@
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <embeddable name="Money\Money">
-        <field name="amount" />
+        <field name="amount" type="bigint"/>
         <embedded name="currency" class="Money\Currency" use-column-prefix="false" />
     </embeddable>
 </doctrine-mapping>
